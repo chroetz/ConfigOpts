@@ -1,44 +1,48 @@
 #' @export
-validateOpts <- function(x, filled = FALSE) {
+validateOpts <- function(x, filled = TRUE) {
   stopifnot(inherits(x, "Opts"))
-  classOfX <- oldClass(x)
-  stopifnot(length(classOfX) >= 2) # Opts is abstract class
   stopifnot(is.list(x))
   stopifnot(!is.null(names(x)) || length(x) == 0)
   stopifnot(length(unique(names(x))) == length(x))
 
+  classOfX <- oldClass(x)
+  objectName <- paste0(rev(classOfX), collapse="_")
   optsClass <- classOfX[-length(classOfX)]
   defaultOpts <- getDefaultOpts(optsClass)
 
-  stopifnot(all(names(x) %in% names(defaultOpts)))
-  if (filled) {
-    # TODO: does not work with Typed Opts
-    stopifnot(all(
-      startsWith(names(defaultOpts), "_") |
-      names(defaultOpts) %in% names(x)))
+  if (!(all(names(x) %in% names(defaultOpts)))) {
+    stop(
+      objectName, " has unknown entires: ",
+      paste0(setdiff(names(x), names(defaultOpts)), collapse=","))
+  }
+  if (filled && !all(names(defaultOpts) %in% names(x))) {
+    stop(
+      objectName, " has missing entires: ",
+      paste0(setdiff(names(defaultOpts), names(x)), collapse=","))
   }
 
   for (nm in names(x)) {
-    stopifnot(doesTypeMatch(x[nm], defaultOpts[nm]))
+    stopifnot(doesTypeMatch(x[[nm]], defaultOpts[[nm]]))
   }
 
-  for (i in seq_along(x)) {
-    if (isOpts(x[[i]])) {
-      validateOpts(x[[i]])
+  for (nm in names(x)) {
+    if (isOpts(x[[nm]])) {
+      validateOpts(x[[nm]], filled)
     }
   }
   if (inherits(x, "List") && "list" %in% names(x)) {
     for (i in seq_along(x$list)) {
-      # inheritsOptsClass() calls isOpts() calls validateOpts()
-      stopifnot(inheritsOptsClass(x$list[[i]], setdiff(optsClass, "List")))
+      stopifnot(all(setdiff(optsClass, "List") %in% oldClass(x$list[[i]])))
+      validateOpts(x$list[[i]], filled)
     }
   }
 
   return(invisible(x))
 }
 
-doesTypeMatch <- function(x, y) {
-  (typeof(x) == typeof(y) || (is.numeric(x) && is.numeric(y))) &&
-    (length(dim(x)) == length(dim(y)))
+doesTypeMatch <- function(x, proto) {
+  (typeof(x) == typeof(proto) || (is.numeric(x) && is.numeric(proto))) &&
+    (length(dim(x)) == length(dim(proto))) &&
+    (all(oldClass(proto) %in% oldClass(x)))
 }
 

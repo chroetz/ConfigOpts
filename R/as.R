@@ -11,7 +11,7 @@ asOpts.Opts <- function(x, optsClass = NULL, .fill = TRUE) {
   if (.fill) {
     x <- fillWithDefaultOpts(x)
   }
-  validateOpts(x)
+  validateOpts(x, filled = .fill)
 }
 
 #' @export

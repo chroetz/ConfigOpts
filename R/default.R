@@ -1,23 +1,34 @@
 #' @export
-checkOptsHasDefault <- function(opts, optsClass = NULL) {
-  opts <- asOpts(opts, optsClass)
-  optsClass <- getOptsClass(opts)
-  defaultOpts <- getDefaultOpts(optsClass)
-  unknownNames <- setdiff(names(opts), names(defaultOpts))
-  lapply(unknownNames, \(nm) cat("Opts entry unknown: ", nm, "\n"))
-  for (i in seq_along(opts)) {
-    if (isOpts(opts[[i]])) {
-      cat("Checking Opts ", names(opts)[i], "\n")
-      checkOptsHasDefault(opts[[i]])
-    }
+getDefaultOpts <- function(optsClass, removeUnderscoreEntries = TRUE) {
+  defaultPath <- getOption("ConfigOpts.pathDefaults")
+  if (is.null(defaultPath)) {
+    stop("The path to the folder where the default Opts are located is not defined.
+         Call `optsions(ConfigOpts.pathDefaults = <path>)` to set it.")
   }
-  if (isListOpts(opts)) {
-    for (i in seq_along(opts$list)) {
-      cat("Checking ListOpts entry nr ", i, "\n")
-      checkOptsHasDefault(opts$list[[i]])
-    }
+  thisDefaultOpts <- getSingleDefaultOpts(
+    optsClass,
+    defaultPath,
+    removeUnderscoreEntries = FALSE)
+  if ("_defaultSubClass" %in% names(thisDefaultOpts)) {
+    return(getDefaultOpts(c(thisDefaultOpts[["_defaultSubClass"]], optsClass), removeUnderscoreEntries))
   }
-  return(invisible(NULL))
+  optsLst <- lapply(rev(seq_along(optsClass)), function(i) {
+    getSingleDefaultOpts(
+      optsClass[i:length(optsClass)],
+      defaultPath,
+      removeUnderscoreEntries)
+  })
+  overwriteConsecutively(optsLst)
+}
+
+
+getSingleDefaultOpts <- function(optsClass, defaultPath, removeUnderscoreEntries) {
+  fl <- file.path(defaultPath, getDefaultOptsFileName(optsClass))
+  fex <- file.exists(fl)
+  if (!any(fex)) {
+    stop("Cannot find any defaultOpts file:\n", paste0(fl, collapse="\n"))
+  }
+  readOptsBare(fl[which(fex)[1]], removeUnderscoreEntries)
 }
 
 
@@ -26,16 +37,12 @@ getDefaultOptsFileName <- function(optsClass) {
 }
 
 
-getDefaultOpts <- function(optsClass, removeUnderscoreEntries = TRUE) {
-  defaultPath <- getOption("ConfigOpts.pathDefaults")
-  if (is.null(defaultPath)) {
-    stop("The path to the folder where the default Opts are located is not defined.
-         Call `optsions(ConfigOpts.pathDefaults = <path>)` to set it.")
+overwriteConsecutively <- function(optsLst) {
+  opts <- optsLst[[1]]
+  for (i in seq_len(length(optsLst)-1) + 1) {
+    opts[names(optsLst[[i]])] <- optsLst[[i]]
   }
-  fl <- file.path(defaultPath, getDefaultOptsFileName(optsClass))
-  fex <- file.exists(fl)
-  if (!any(fex)) {
-    stop("Cannot find any defaultOpts file:\n", paste0(fl, collapse="\n"))
-  }
-  readOptsBare(fl[which(fex)[1]], removeUnderscoreEntries)
+  oldClass(opts) <- oldClass(optsLst[[length(optsLst)]])
+  return(opts)
 }
+

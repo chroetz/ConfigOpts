@@ -25,9 +25,7 @@ setOptsClass <- function(opts, optsClass) {
 
 
 getOptsClass <- function(opts) {
-  validateOpts(opts)
   cl <- oldClass(opts)
-  len <- length(cl)
-  cl[-len]
+  cl[-length(cl)]
 }
 
