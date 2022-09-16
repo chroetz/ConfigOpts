@@ -6,14 +6,15 @@ checkOptsHasDefault <- function(opts, optsClass = NULL) {
   unknownNames <- setdiff(names(opts), names(defaultOpts))
   lapply(unknownNames, \(nm) cat("Opts entry unknown: ", nm, "\n"))
   for (i in seq_along(opts)) {
-    if (inherits(opts[[i]], "Opts")) {
+    if (isOpts(opts[[i]])) {
       cat("Checking Opts ", names(opts)[i], "\n")
       checkOptsHasDefault(opts[[i]])
-    } else if (inherits(opts[[i]], "OptsList")) {
-      cat("Checking OptsList ", names(opts)[i], "\n")
-      for (j in seq_along(opts[[i]])) {
-        checkOptsHasDefault(opts[[i]][[j]])
-      }
+    }
+  }
+  if (isListOpts(opts)) {
+    for (i in seq_along(opts$list)) {
+      cat("Checking ListOpts entry nr ", i, "\n")
+      checkOptsHasDefault(opts$list[[i]])
     }
   }
   return(invisible(NULL))
@@ -21,11 +22,11 @@ checkOptsHasDefault <- function(opts, optsClass = NULL) {
 
 
 getDefaultOptsFileName <- function(optsClass) {
-  paste0(paste0(optsClass, collapse = "_"), ".json")
+  paste0("Opts_", paste0(rev(optsClass), collapse = "_"), ".json")
 }
 
 
-getDefaultOpts <- function(optsClass) {
+getDefaultOpts <- function(optsClass, removeUnderscoreEntries = TRUE) {
   defaultPath <- getOption("ConfigOpts.pathDefaults")
   if (is.null(defaultPath)) {
     stop("The path to the folder where the default Opts are located is not defined.
@@ -36,9 +37,5 @@ getDefaultOpts <- function(optsClass) {
   if (!any(fex)) {
     stop("Cannot find any defaultOpts file:\n", paste0(fl, collapse="\n"))
   }
-  readOpts(
-    fl[which(fex)[1]],
-    optsClass = optsClass,
-    .fill = FALSE,
-    removeUnderscoreEntries = FALSE)
+  readOptsBare(fl[which(fex)[1]], removeUnderscoreEntries)
 }

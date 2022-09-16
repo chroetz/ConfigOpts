@@ -11,7 +11,7 @@ fillWithDefaultOpts <- function(opts, optsClass = NULL, fillThis = TRUE, fillSub
       }
     }
   }
-  if (fillList && isOptsList(opts)) {
+  if (fillList && isListOpts(opts)) {
     for (j in seq_along(opts$list)) {
       opts$list[[j]] <- fillWithDefaultOpts(opts$list[[j]])
     }

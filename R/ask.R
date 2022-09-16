@@ -5,7 +5,17 @@ isOpts <- function(x) {
 }
 
 #' @export
-isOptsList <- function(x) {
-  res <- tryCatch(validateOptsList(x), error = function(cond) FALSE)
-  return(!isFALSE(res))
+inheritsOptsClass <- function(x, optsClass) {
+  isOpts(x) && (inherits(x, optsClass) || length(optsClass) == 0)
 }
+
+#' @export
+isListOpts <- function(x) {
+  isOpts(x) && inheritsOptsClass(x, "List") && hasEntry(x, "list")
+}
+
+#' @export
+hasEntry <- function(opts, entryName) {
+  isTRUE(entryName %in% names(opts))
+}
+

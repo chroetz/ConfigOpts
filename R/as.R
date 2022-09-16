@@ -25,27 +25,3 @@ asOpts.list <- function(x, optsClass = NULL, .fill = TRUE) {
   stopifnot(!is.null(optsClass))
   makeOpts(optsClass, .lst = x, .fill = .fill)
 }
-
-
-#' @export
-asOptsList <- function(x, optsListClass=NULL) {
-  UseMethod("asOpts")
-}
-
-#' @export
-asOptsList.List <- function(x, optsListClass=NULL) {
-  if (!is.null(optsListClass)) {
-    x <- setOptsListClass(x, optsListClass)
-  }
-  validateOptsList(x)
-}
-
-#' @export
-asOptsList.Opts <- function(x, optsListClass=NULL) {
-  makeOptsList(optsListClass, .lst = x)
-}
-
-#' @export
-asOptsList.list <- function(x, optsListClass=NULL) {
-  makeOptsList(optsListClass, .lst = x)
-}
