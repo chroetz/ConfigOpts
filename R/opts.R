@@ -3,6 +3,11 @@ makeOpts <- function(optsClass, ..., .lst = NULL, .fill = TRUE) {
   opts <- c(.lst, list(...))
   opts <- setOptsClass(opts, optsClass)
   if (.fill) opts <- fillWithDefaultOpts(opts)
+  if (length(opts) == 0) {
+    opts <- list()
+    names(opts) <- character(0)
+    opts <- setOptsClass(opts, optsClass)
+  }
   validateOpts(opts)
 }
 

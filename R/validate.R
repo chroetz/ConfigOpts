@@ -2,7 +2,7 @@
 validateOpts <- function(x, filled = TRUE) {
   stopifnot(inherits(x, "Opts"))
   stopifnot(is.list(x))
-  stopifnot(!is.null(names(x)) || length(x) == 0)
+  stopifnot(!is.null(names(x)))
   stopifnot(length(unique(names(x))) == length(x))
 
   classOfX <- oldClass(x)
