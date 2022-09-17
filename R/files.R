@@ -1,8 +1,10 @@
 #' @export
-writeOpts <- function(opts, file) {
+writeOpts <- function(opts, file, addMetaInfo = TRUE) {
   stopifnot(isOpts(opts))
-  opts[["_timeStamp"]] <- date()
-  opts[["_packageVersion"]] <- getPackageVersion()
+  if (addMetaInfo) {
+    opts[["_timeStamp"]] <- date()
+    opts[["_packageVersion"]] <- getPackageVersion()
+  }
   if (is.character(file) && !endsWith(file, ".json")) {
     file <- paste0(file, ".json")
   }
