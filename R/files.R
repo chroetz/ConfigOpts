@@ -1,6 +1,6 @@
 #' @export
 writeOpts <- function(opts, file, addMetaInfo = TRUE) {
-  stopifnot(isOpts(opts))
+  validateOpts(opts, filled=FALSE)
   if (addMetaInfo) {
     opts[["_timeStamp"]] <- date()
     opts[["_packageVersion"]] <- getPackageVersion()

@@ -10,27 +10,32 @@ validateOpts <- function(x, filled = TRUE) {
   optsClass <- classOfX[-length(classOfX)]
   defaultOpts <- getDefaultOpts(optsClass)
 
-  if (!(all(names(x) %in% names(defaultOpts)))) {
+  namesX <- names(x)
+  namesX <- namesX[!startsWith(namesX, "_")]
+  namesDefault <- names(defaultOpts)
+  namesDefault <- namesDefault[!startsWith(namesDefault, "_")]
+
+  if (!(all(namesX %in% namesDefault))) {
     stop(
       objectName, " has unknown entires: ",
-      paste0(setdiff(names(x), names(defaultOpts)), collapse=","))
+      paste0(setdiff(namesX, namesDefault), collapse=","))
   }
-  if (filled && !all(names(defaultOpts) %in% names(x))) {
+  if (filled && !all(namesDefault %in% namesX)) {
     stop(
       objectName, " has missing entires: ",
-      paste0(setdiff(names(defaultOpts), names(x)), collapse=","))
+      paste0(setdiff(namesDefault, namesX), collapse=","))
   }
 
-  for (nm in names(x)) {
+  for (nm in namesX) {
     stopifnot(doesTypeMatch(x[[nm]], defaultOpts[[nm]]))
   }
 
-  for (nm in names(x)) {
+  for (nm in namesX) {
     if (isOpts(x[[nm]])) {
       validateOpts(x[[nm]], filled)
     }
   }
-  if (inherits(x, "List") && "list" %in% names(x)) {
+  if (inherits(x, "List") && "list" %in% namesX) {
     for (i in seq_along(x$list)) {
       stopifnot(all(setdiff(optsClass, "List") %in% oldClass(x$list[[i]])))
       validateOpts(x$list[[i]], filled)

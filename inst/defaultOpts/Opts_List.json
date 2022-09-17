@@ -1,4 +1,6 @@
 {
     "_class": ["List", "Opts"],
-    "list": {}
+    "_description": "Opts in the list will be automatically checked. For subclasses of List the list elements must inherit form this class.",
+    "list": {},
+    "_list_description": "A list of Opts."
 }
