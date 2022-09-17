@@ -27,7 +27,17 @@ validateOpts <- function(x, filled = TRUE) {
   }
 
   for (nm in namesX) {
-    stopifnot(doesTypeMatch(x[[nm]], defaultOpts[[nm]]))
+    entry <- x[[nm]]
+    proto <- defaultOpts[[nm]]
+    if (!(typeof(entry) == typeof(proto) || (is.numeric(entry) && is.numeric(proto))))
+      stop("Type of entry ", nm, " does not match: is ", typeof(entry),
+           ", expect: ", typeof(proto))
+    if (!(length(dim(entry)) == length(dim(proto))))
+      stop("Dim length of entry ", nm, " does not match: is ", length(dim(entry)),
+           ", expect: ", length(dim(proto)))
+    if (!(all(oldClass(proto) %in% oldClass(entry))))
+      stop("Entry ", nm, " must be of class ", paste(oldClass(proto), collapse="_"),
+           ", but is of class ", paste(oldClass(entry), collapse="_"))
   }
 
   for (nm in namesX) {
@@ -37,7 +47,11 @@ validateOpts <- function(x, filled = TRUE) {
   }
   if (inherits(x, "List") && "list" %in% namesX) {
     for (i in seq_along(x$list)) {
-      stopifnot(all(setdiff(optsClass, "List") %in% oldClass(x$list[[i]])))
+      expect <- setdiff(optsClass, "List")
+      this <- oldClass(x$list[[i]])
+      if (!(all(expect %in% this)))
+        stop("Entries of list must be of class ", paste0(expect, collapse="_"),
+             ", but entry nr ", i, "is of class ", paste0(this, collapse="_"))
       validateOpts(x$list[[i]], filled)
     }
   }

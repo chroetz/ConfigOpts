@@ -1,4 +1,7 @@
 fillWithDefaultOpts <- function(opts, optsClass = NULL, fillThis = TRUE, fillSub = TRUE, fillList = TRUE) {
+  if ("_defaultInstance" %in% names(opts)) {
+    opts <- opts[["_defaultInstance"]]
+  }
   if (is.null(optsClass)) {
     optsClass <- oldClass(opts)
     optsClass <- optsClass[-length(optsClass)]
