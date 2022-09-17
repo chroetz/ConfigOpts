@@ -1,5 +1,5 @@
 #' @export
-getDefaultOpts <- function(optsClass, removeUnderscoreEntries = TRUE) {
+getDefaultOpts <- function(optsClass, removeUnderscoreEntries = TRUE, fill = FALSE) {
   defaultPath <- getOption("ConfigOpts.pathDefaults")
   if (is.null(defaultPath)) {
     stop("The path to the folder where the default Opts are located is not defined.
@@ -18,7 +18,11 @@ getDefaultOpts <- function(optsClass, removeUnderscoreEntries = TRUE) {
       defaultPath,
       removeUnderscoreEntries)
   })
-  overwriteConsecutively(optsLst)
+  opts <- overwriteConsecutively(optsLst)
+  if (fill) {
+    opts <- fillWithDefaultOpts(opts, fillThis = FALSE)
+  }
+  return(opts)
 }
 
 
