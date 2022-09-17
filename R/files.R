@@ -3,7 +3,8 @@ writeOpts <- function(opts, file, addMetaInfo = TRUE) {
   validateOpts(opts, filled=FALSE)
   if (addMetaInfo) {
     opts[["_timeStamp"]] <- date()
-    opts[["_packageVersion"]] <- getPackageVersion()
+    pInfo <- getPackageInfo()
+    opts[paste0("_", names(pInfo))] <- pInfo
   }
   if (is.character(file) && !endsWith(file, ".json")) {
     file <- paste0(file, ".json")
@@ -60,6 +61,16 @@ putClassAttributAsListEntry <- function(obj) {
   return(obj)
 }
 
-getPackageVersion <- function() {
-  format(utils::packageVersion(utils::packageName()))
+getPackageInfo <- function() {
+  info <- list()
+  info$packageNames <- unique(sapply(sys.frames(), methods::getPackageName))
+  info$packageVersions <- sapply(info$packageNames, function(pn) {
+    tryCatch(
+      {
+        format(utils::packageVersion(pn))
+      },
+      error = function(cond) "")
+    }
+  )
+  return(info)
 }
