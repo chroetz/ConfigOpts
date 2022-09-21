@@ -7,7 +7,7 @@
   }
 
   v <- getOption("ConfigOpts.validate")
-  if (!is.null(v)) {
+  if (is.null(v)) {
     options(ConfigOpts.validate = TRUE)
   }
 
