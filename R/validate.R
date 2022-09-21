@@ -1,5 +1,8 @@
 #' @export
 validateOpts <- function(x, filled = TRUE) {
+
+  if (isFALSE(getOption("ConfigOpts.validate"))) return(invisible(x))
+
   stopifnot(inherits(x, "Opts"))
   stopifnot(is.list(x))
   stopifnot(!is.null(names(x)))
