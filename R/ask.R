@@ -1,6 +1,6 @@
 #' @export
 isOpts <- function(x, filled=FALSE) {
-  res <- tryCatch(validateOpts(x, filled), error = function(cond) FALSE)
+  res <- tryCatch(validateOpts(x, filled, force=TRUE), error = function(cond) FALSE)
   return(!isFALSE(res))
 }
 
