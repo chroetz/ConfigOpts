@@ -6,7 +6,15 @@ isOpts <- function(x, filled=FALSE) {
 
 #' @export
 inheritsOptsClass <- function(x, optsClass) {
-  isOpts(x, filled=FALSE) && (inherits(x, optsClass) || length(optsClass) == 0)
+  if (!isOpts(x, filled=FALSE)) return(FALSE)
+  if (length(optsClass) == 0) return(TRUE)
+  xOptsClass <- oldClass(x)
+  xOptsClass <- xOptsClass[-length(xOptsClass)]
+  if (length(optsClass) > length(xOptsClass)) return(FALSE)
+  paddedOptsCalls <- c(rep(NA, length(xOptsClass) - length(optsClass)), optsClass)
+  eqTest <- xOptsClass == paddedOptsCalls
+  eqTest[is.na(eqTest)] <- TRUE
+  return(all(eqTest))
 }
 
 #' @export

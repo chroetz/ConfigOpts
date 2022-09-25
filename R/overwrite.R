@@ -1,5 +1,5 @@
 #' @export
-overwriteOpts <- function(opts, lst) {
+overwriteOpts <- function(opts, lst) { # Does not overwrite opts structure, i.e., cant replace opts entries
   opts <- asOpts(opts)
   lst <- as.list(lst)
   for (nm in names(lst)) {

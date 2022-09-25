@@ -1,5 +1,9 @@
 #' @export
-getDefaultOpts <- function(optsClass, removeUnderscoreEntries = TRUE, fill = FALSE) {
+getDefaultOpts <- function(
+    optsClass,
+    removeUnderscoreEntries = TRUE,
+    fill = FALSE,
+    getSubClass = TRUE) {
   defaultPath <- getOption("ConfigOpts.pathDefaults")
   if (is.null(defaultPath)) {
     stop("The path to the folder where the default Opts are located is not defined.
@@ -9,7 +13,7 @@ getDefaultOpts <- function(optsClass, removeUnderscoreEntries = TRUE, fill = FAL
     optsClass,
     defaultPath,
     removeUnderscoreEntries = FALSE)
-  if ("_defaultSubClass" %in% names(thisDefaultOpts)) {
+  if (getSubClass && "_defaultSubClass" %in% names(thisDefaultOpts)) {
     return(getDefaultOpts(c(thisDefaultOpts[["_defaultSubClass"]], optsClass), removeUnderscoreEntries))
   }
   optsLst <- lapply(rev(seq_along(optsClass)), function(i) {

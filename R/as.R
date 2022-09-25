@@ -5,7 +5,7 @@ asOpts <- function(x, optsClass = NULL, .fill = TRUE) {
 
 #' @export
 asOpts.Opts <- function(x, optsClass = NULL, .fill = TRUE) {
-  if (!is.null(optsClass)) {
+  if (!is.null(optsClass) && !inheritsOptsClass(x, optsClass)) {
     x <- setOptsClass(x, optsClass)
   }
   if (.fill) {

@@ -8,7 +8,7 @@ makeOpts <- function(optsClass, ..., .lst = NULL, .fill = TRUE) {
     names(opts) <- character(0)
     opts <- setOptsClass(opts, optsClass)
   }
-  validateOpts(opts)
+  (validateOpts(opts))
 }
 
 
