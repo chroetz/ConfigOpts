@@ -1,12 +1,15 @@
 #' @export
-isOpts <- function(x, filled=FALSE) {
-  res <- tryCatch(validateOpts(x, filled, force=TRUE), error = function(cond) FALSE)
-  return(!isFALSE(res))
+isOpts <- function(x) {
+  if (!inherits(x, "Opts")) return(FALSE)
+  if (!is.list(x)) return(FALSE)
+  if (is.null(names(x))) return(FALSE)
+  if (length(unique(names(x))) != length(x)) return(FALSE)
+  return(TRUE)
 }
 
 #' @export
 inheritsOptsClass <- function(x, optsClass) {
-  if (!isOpts(x, filled=FALSE)) return(FALSE)
+  if (!isOpts(x)) return(FALSE)
   if (length(optsClass) == 0) return(TRUE)
   xOptsClass <- oldClass(x)
   xOptsClass <- xOptsClass[-length(xOptsClass)]
@@ -18,8 +21,8 @@ inheritsOptsClass <- function(x, optsClass) {
 }
 
 #' @export
-isListOpts <- function(x, filled=FALSE) {
-  isOpts(x, filled) && inheritsOptsClass(x, "List") && hasEntry(x, "list")
+isListOpts <- function(x) {
+  isOpts(x) && inheritsOptsClass(x, "List") && hasEntry(x, "list")
 }
 
 #' @export
