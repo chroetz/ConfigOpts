@@ -1,15 +1,31 @@
+#' Write an Opts object as a json file.
+#'
+#' @param opts An object of S3 class Opts.
+#' @param file A path to the output file or `NULL`.
+#' @param dir `NULL` or a path to the output directory. In the latter case, the
+#'   output file name will be created automatically from the class.
+#' @param addMetaInfo Should a time stamp and package versions be added before
+#'   writing the object?
+#'
 #' @export
-writeOpts <- function(opts, file, addMetaInfo = TRUE) {
+writeOpts <- function(opts, file = NULL, dir = NULL, addMetaInfo = TRUE) {
+  if ((is.null(file) && is.null(dir)) || (!is.null(file) && !is.null(dir))) {
+    stop("Exactly one of the arguments `dir` and `file` must be non-NULL.")
+  }
   validateOpts(opts, filled=FALSE)
   if (addMetaInfo) {
     opts[["_timeStamp"]] <- date()
     pInfo <- getPackageInfo()
     opts[paste0("_", names(pInfo))] <- pInfo
   }
+  if (is.null(file)) {
+    file <- file.path(dir, paste(rev(oldClass(opts)), collapse="_"))
+  }
   if (is.character(file) && !endsWith(file, ".json")) {
     file <- paste0(file, ".json")
   }
   opts <- putClassAttributAsListEntry(opts)
+  if (file.exists(file)) warning(file, " will be overwritten")
   jsonlite::write_json(opts, file, pretty = TRUE, digits = 8, auto_unbox = TRUE)
 }
 
