@@ -6,3 +6,21 @@
 classString <- function(opts, collapse="_") {
   paste(oldClass(opts), collapse=collapse)
 }
+
+#' @export
+format.Opts <- function(opts, short=FALSE, flat=FALSE) {
+  if (short) {
+    str <- classString(opts)
+  } else {
+    str <- jsonlite::toJSON(
+      putClassAttributAsListEntry(opts),
+      pretty=!flat,
+      auto_unbox=TRUE)
+  }
+  return(str)
+}
+
+#' @export
+print.Opts <- function(opts, short=FALSE, flat=FALSE) {
+  cat(format(opts, short, flat), "\n")
+}
