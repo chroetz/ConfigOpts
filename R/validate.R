@@ -59,7 +59,7 @@ validateOpts <- function(x, filled = TRUE, force = FALSE) {
     }
   }
 
-  return(invisible(x))
+  return(x)
 }
 
 doesTypeMatch <- function(x, proto) {

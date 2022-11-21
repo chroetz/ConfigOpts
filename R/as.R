@@ -16,8 +16,12 @@ asOpts.Opts <- function(x, optsClass = NULL, .fill = TRUE) {
 
 #' @export
 asOpts.character <- function(x, optsClass = NULL, .fill = TRUE) {
-  stopifnot(length(x) == 1, file.exists(x))
-  readOpts(x, optsClass, .fill = .fill)
+  if (file.exists(x)) {
+    readOpts(x, optsClass, .fill = .fill)
+  } else {
+    if (!is.null(optsClass)) warning("Ignoring value of argument optsClass.")
+    makeOpts(x, .fill = .fill)
+  }
 }
 
 #' @export
