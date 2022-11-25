@@ -30,17 +30,13 @@ validateOpts <- function(x, filled = TRUE, force = FALSE) {
   }
 
   for (nm in namesX) {
-    entry <- x[[nm]]
-    proto <- defaultOpts[[nm]]
-    if (!(typeof(entry) == typeof(proto) || (is.numeric(entry) && is.numeric(proto))))
-      stop("Type of entry ", nm, " does not match: is ", typeof(entry),
-           ", expect: ", typeof(proto))
-    if (!(length(dim(entry)) == length(dim(proto))))
-      stop("Dim length of entry ", nm, " does not match: is ", length(dim(entry)),
-           ", expect: ", length(dim(proto)))
-    if (!(all(oldClass(proto) %in% oldClass(entry))))
-      stop("Entry ", nm, " must be of class ", paste(oldClass(proto), collapse="_"),
-           ", but is of class ", paste(oldClass(entry), collapse="_"))
+    if (inherits(x[[nm]], "expansion")) {
+      for (i in seq_along(x[[nm]])) {
+        checkEntry(x[[nm]][[i]], defaultOpts[[nm]], paste0(nm,"[",i,"]"))
+      }
+    } else {
+      checkEntry(x[[nm]], defaultOpts[[nm]], nm)
+    }
   }
 
   for (nm in namesX) {
@@ -62,9 +58,14 @@ validateOpts <- function(x, filled = TRUE, force = FALSE) {
   return(x)
 }
 
-doesTypeMatch <- function(x, proto) {
-  (typeof(x) == typeof(proto) || (is.numeric(x) && is.numeric(proto))) &&
-    (length(dim(x)) == length(dim(proto))) &&
-    (all(oldClass(proto) %in% oldClass(x)))
+checkEntry <- function(entry, proto, name) {
+  if (!(typeof(entry) == typeof(proto) || (is.numeric(entry) && is.numeric(proto))))
+    stop("Type of entry `", name, "` does not match: is ", typeof(entry),
+         ", expect: ", typeof(proto))
+  if (!(length(dim(entry)) == length(dim(proto))))
+    stop("Dim length of entry `", name, "` does not match: is ", length(dim(entry)),
+         ", expect: ", length(dim(proto)))
+  if (!(all(oldClass(proto) %in% oldClass(entry))))
+    stop("Entry `", name, "` must be of class ", paste(oldClass(proto), collapse="_"),
+         ", but is of class ", paste(oldClass(entry), collapse="_"))
 }
-

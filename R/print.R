@@ -1,6 +1,8 @@
 #' S3 class as a single string
 #'
 #' @param opts Any object, in particular an Opts object.
+#' @param collapse An optional character string to separate the class vector
+#'   entries.
 #' @return A single string. The concatenation of the S3 class elements.
 #' @export
 classString <- function(opts, collapse="_") {

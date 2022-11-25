@@ -8,9 +8,7 @@ makeOpts <- function(optsClass, ..., .lst = NULL, .fill = TRUE) {
     names(opts) <- character(0)
     opts <- setOptsClass(opts, optsClass)
   }
-  opts <- expandList(opts)
-  if (isOpts(opts)) return(validateOpts(opts))
-  for (o in opts) validateOpts(o)
+  validateOpts(opts, filled = .fill)
   return(opts)
 }
 
