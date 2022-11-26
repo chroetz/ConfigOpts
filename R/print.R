@@ -16,8 +16,8 @@ format.Opts <- function(opts, short=FALSE, flat=FALSE) {
   } else {
     str <- jsonlite::toJSON(
       putClassAttributAsListEntry(opts),
-      pretty=!flat,
-      auto_unbox=TRUE)
+      pretty = !flat,
+      auto_unbox = TRUE)
   }
   return(str)
 }

@@ -1,9 +1,17 @@
 #' @export
 expansion <- function(...) {
-  x <- list(...)
-  names(x) <- seq_along(x)
-  class(x) <- "expansion"
-  x
+  values <- c(...)
+  lst <- list(values = values)
+  class(lst) <- "expansion"
+  lst
+}
+
+#' @export
+expansionList <- function(...) {
+  values <- list(...)
+  lst <- list(values = values)
+  class(lst) <- "expansion"
+  lst
 }
 
 #' @export
@@ -17,7 +25,14 @@ expandList <- function(opts) {
 .expandList <- function(x) {
   if (!is.list(x) || length(x) == 0) return(x)
   if (inherits(x, "expansion")) {
-    x <- unclass(x)
+    x <- x$values
+    if (!is.list(x)) {
+      if (is.array(x)) {
+        x <- apply(x, 1, force, simplify = FALSE)
+      } else {
+        x <- as.list(x)
+      }
+    }
     attr(x, "expand") <- TRUE
   }
   needsExpansion <- sapply(x, \(y) isTRUE(attr(y, "expand")))

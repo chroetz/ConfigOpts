@@ -8,6 +8,9 @@ classString(opts, collapse = "_")
 }
 \arguments{
 \item{opts}{Any object, in particular an Opts object.}
+
+\item{collapse}{An optional character string to separate the class vector
+entries.}
 }
 \value{
 A single string. The concatenation of the S3 class elements.

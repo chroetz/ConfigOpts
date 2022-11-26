@@ -31,8 +31,8 @@ validateOpts <- function(x, filled = TRUE, force = FALSE) {
 
   for (nm in namesX) {
     if (inherits(x[[nm]], "expansion")) {
-      for (i in seq_along(x[[nm]])) {
-        checkEntry(x[[nm]][[i]], defaultOpts[[nm]], paste0(nm,"[",i,"]"))
+      for (i in seq_along(x[[nm]]$values)) {
+        checkEntry(x[[nm]]$values[[i]], defaultOpts[[nm]], paste0(nm,"[",i,"]"))
       }
     } else {
       checkEntry(x[[nm]], defaultOpts[[nm]], nm)
