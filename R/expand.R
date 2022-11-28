@@ -1,6 +1,8 @@
 #' @export
 expansion <- function(...) {
   values <- c(...)
+  if (!is.null(names(values)))
+    values <- as.list(values)
   lst <- list(values = values)
   class(lst) <- "expansion"
   lst
