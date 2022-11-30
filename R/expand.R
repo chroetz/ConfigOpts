@@ -66,10 +66,10 @@ expandList <- function(opts) {
   attr(res, "expand") <- TRUE
   for (i in seq_len(nrow(tblValues))) {
     entry <- x
-    names(entry) <- namesX
-    for (k in seq_along(tblValues)) {
-      entry[[k]] <- tblValues[[k]][[i]]
+    for (nm in names(tblValues)) {
+      entry[[nm]] <- tblValues[[nm]][[i]]
     }
+    names(entry) <- namesX
     res[[i]] <- entry
     names(res)[i] <- tags$name[i]
   }
