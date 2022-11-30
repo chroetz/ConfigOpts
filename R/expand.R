@@ -24,7 +24,7 @@ expandList <- function(opts) {
   return(opts)
 }
 
-# TODO: clean up code and create test
+# TODO: clean up code and create test and write a vignette to explain
 .expandList <- function(x) {
   if (!is.list(x) || length(x) == 0) return(x)
   if (inherits(x, "expansion")) {
@@ -47,6 +47,8 @@ expandList <- function(opts) {
     attr(res, "expand") <- TRUE
     return(res)
   }
+  namesX <- names(x)
+  names(x) <- seq_along(x)
   expansionTags <- lapply(
     x[needsExpansion],
     \(a) {
@@ -64,7 +66,10 @@ expandList <- function(opts) {
   attr(res, "expand") <- TRUE
   for (i in seq_len(nrow(tblValues))) {
     entry <- x
-    for (nm in names(tblValues)) entry[[nm]] <- tblValues[[nm]][[i]]
+    names(entry) <- namesX
+    for (k in seq_along(tblValues)) {
+      entry[[k]] <- tblValues[[k]][[i]]
+    }
     res[[i]] <- entry
     names(res)[i] <- tags$name[i]
   }
