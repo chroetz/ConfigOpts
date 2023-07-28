@@ -4,7 +4,7 @@
 \alias{writeOpts}
 \title{Write an Opts object as a json file.}
 \usage{
-writeOpts(opts, file = NULL, dir = NULL, addMetaInfo = TRUE)
+writeOpts(opts, file = NULL, dir = NULL, addMetaInfo = TRUE, digits = NA)
 }
 \arguments{
 \item{opts}{An object of S3 class Opts.}
@@ -16,6 +16,9 @@ output file name will be created automatically from the class.}
 
 \item{addMetaInfo}{Should a time stamp and package versions be added before
 writing the object?}
+
+\item{digits}{max number of decimal digits to write for numeric values. Use
+\code{I()} to specify significant digits. Use \code{NA} for max precision.}
 }
 \description{
 Write an Opts object as a json file.

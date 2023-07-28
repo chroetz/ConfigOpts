@@ -8,7 +8,7 @@ Description: Defines an S3 class Opts. It stores configuratio options that can b
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports: 
     jsonlite,
     methods,

@@ -6,9 +6,11 @@
 #'   output file name will be created automatically from the class.
 #' @param addMetaInfo Should a time stamp and package versions be added before
 #'   writing the object?
+#' @param digits max number of decimal digits to write for numeric values. Use
+#'   `I()` to specify significant digits. Use `NA` for max precision.
 #'
 #' @export
-writeOpts <- function(opts, file = NULL, dir = NULL, addMetaInfo = TRUE) {
+writeOpts <- function(opts, file = NULL, dir = NULL, addMetaInfo = TRUE, digits = NA) {
   if ((is.null(file) && is.null(dir)) || (!is.null(file) && !is.null(dir))) {
     stop("Exactly one of the arguments `dir` and `file` must be non-NULL.")
   }
@@ -26,7 +28,7 @@ writeOpts <- function(opts, file = NULL, dir = NULL, addMetaInfo = TRUE) {
   }
   opts <- putClassAttributAsListEntry(opts)
   if (file.exists(file)) warning(file, " will be overwritten")
-  jsonlite::write_json(opts, file, pretty = TRUE, digits = 8, auto_unbox = TRUE)
+  jsonlite::write_json(opts, file, pretty = TRUE, digits = digits, auto_unbox = TRUE)
 }
 
 
