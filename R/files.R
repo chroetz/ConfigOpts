@@ -92,3 +92,19 @@ getPackageInfo <- function() {
   )
   return(info)
 }
+
+
+#' @export
+getAvailableOptsClasses <- function() {
+  defaultPath <- getOption("ConfigOpts.pathDefaults")
+  fileNames <-
+    defaultPath |>
+    lapply(list.files, pattern = "^Opts_.*\\.json$") |>
+    unlist() |>
+    unique()
+  splited <- strsplit(fileNames, "_|\\.")
+  lapply(
+    splited,
+    \(x) rev(x[2:(length(x)-1)])
+  )
+}
