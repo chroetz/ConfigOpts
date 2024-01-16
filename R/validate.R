@@ -59,12 +59,13 @@ validateOpts <- function(x, filled = TRUE, force = FALSE) {
 }
 
 checkEntry <- function(entry, proto, name) {
+  if (length(entry) == 0) return()
   if (!(typeof(entry) == typeof(proto) || (is.numeric(entry) && is.numeric(proto))))
     stop("Type of entry `", name, "` does not match: is ", typeof(entry),
          ", expect: ", typeof(proto))
-  if (!(length(dim(entry)) == length(dim(proto))))
-    stop("Dim length of entry `", name, "` does not match: is ", length(dim(entry)),
-         ", expect: ", length(dim(proto)))
+  # if (!(length(dim(entry)) == length(dim(proto))))
+  #   stop("Dim length of entry `", name, "` does not match: is ", length(dim(entry)),
+  #        ", expect: ", length(dim(proto)))
   if (!(all(oldClass(proto) %in% oldClass(entry))))
     stop("Entry `", name, "` must be of class ", paste(oldClass(proto), collapse="_"),
          ", but is of class ", paste(oldClass(entry), collapse="_"))
