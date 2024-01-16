@@ -59,7 +59,7 @@ validateOpts <- function(x, filled = TRUE, force = FALSE) {
 }
 
 checkEntry <- function(entry, proto, name) {
-  if (length(entry) == 0) return()
+  if (length(entry) == 0 || length(proto) == 0) return()
   if (!(typeof(entry) == typeof(proto) || (is.numeric(entry) && is.numeric(proto))))
     stop("Type of entry `", name, "` does not match: is ", typeof(entry),
          ", expect: ", typeof(proto))
