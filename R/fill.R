@@ -26,7 +26,7 @@ fillWithDefaultOpts <- function(opts, optsClass = NULL, fillThis = TRUE, fillSub
 
 fillOpts <- function(opts, filler) {
   newNames <- setdiff(names(filler), names(opts))
-  opts[newNames] <- filler[newNames]
+  opts[newNames] <- unclass(filler)[newNames]
   if (all(oldClass(opts) %in% oldClass(filler))) {
     oldClass(opts) <- oldClass(filler)
   }
