@@ -25,10 +25,8 @@ fillWithDefaultOpts <- function(opts, optsClass = NULL, fillThis = TRUE, fillSub
 }
 
 fillOpts <- function(opts, filler) {
-  for (nm in names(filler)) {
-    if (nm %in% names(opts)) next
-    opts[[nm]] <- filler[[nm]]
-  }
+  newNames <- setdiff(names(filler), names(opts))
+  opts[newNames] <- filler[newNames]
   if (all(oldClass(opts) %in% oldClass(filler))) {
     oldClass(opts) <- oldClass(filler)
   }
