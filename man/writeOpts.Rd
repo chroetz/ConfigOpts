@@ -4,7 +4,14 @@
 \alias{writeOpts}
 \title{Write an Opts object as a json file.}
 \usage{
-writeOpts(opts, file = NULL, dir = NULL, addMetaInfo = TRUE, digits = NA)
+writeOpts(
+  opts,
+  file = NULL,
+  dir = NULL,
+  addMetaInfo = TRUE,
+  digits = NA,
+  warn = TRUE
+)
 }
 \arguments{
 \item{opts}{An object of S3 class Opts.}
@@ -19,6 +26,8 @@ writing the object?}
 
 \item{digits}{max number of decimal digits to write for numeric values. Use
 \code{I()} to specify significant digits. Use \code{NA} for max precision.}
+
+\item{warn}{Should warnings be signaled if, e.g., a file will be overwritten?}
 }
 \description{
 Write an Opts object as a json file.
