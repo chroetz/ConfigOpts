@@ -8,14 +8,15 @@
 #'   writing the object?
 #' @param digits max number of decimal digits to write for numeric values. Use
 #'   `I()` to specify significant digits. Use `NA` for max precision.
-#' @param warn Should warnings be signaled if, e.g., a file will be overwritten?
+#' @param warn Should warnings be thrown if, e.g., a file will be overwritten?
+#' @param validate Should the opts object be validated? Throws an error for invalid objects.
 #'
 #' @export
-writeOpts <- function(opts, file = NULL, dir = NULL, addMetaInfo = TRUE, digits = NA, warn = TRUE) {
+writeOpts <- function(opts, file = NULL, dir = NULL, addMetaInfo = TRUE, digits = NA, warn = TRUE, validate = TRUE) {
   if ((is.null(file) && is.null(dir)) || (!is.null(file) && !is.null(dir))) {
     stop("Exactly one of the arguments `dir` and `file` must be non-NULL.")
   }
-  validateOpts(opts, filled=FALSE)
+  if (validate) validateOpts(opts, filled=FALSE)
   if (addMetaInfo) {
     opts[["_timeStamp"]] <- date()
     pInfo <- getPackageInfo()

@@ -10,7 +10,8 @@ writeOpts(
   dir = NULL,
   addMetaInfo = TRUE,
   digits = NA,
-  warn = TRUE
+  warn = TRUE,
+  validate = TRUE
 )
 }
 \arguments{
@@ -27,7 +28,9 @@ writing the object?}
 \item{digits}{max number of decimal digits to write for numeric values. Use
 \code{I()} to specify significant digits. Use \code{NA} for max precision.}
 
-\item{warn}{Should warnings be signaled if, e.g., a file will be overwritten?}
+\item{warn}{Should warnings be thrown if, e.g., a file will be overwritten?}
+
+\item{validate}{Should the opts object be validated? Throws an error for invalid objects.}
 }
 \description{
 Write an Opts object as a json file.
