@@ -38,9 +38,9 @@ expandList <- function(opts) {
     }
     attr(x, "expand") <- TRUE
   }
-  needsExpansion <- sapply(x, \(y) isTRUE(attr(y, "expand")))
+  needsExpansion <- vapply(x, \(y) isTRUE(attr(y, "expand")), logical(1))
   x[!needsExpansion] <- lapply(x[!needsExpansion], .expandList)
-  needsExpansion <- sapply(x, \(y) isTRUE(attr(y, "expand")))
+  needsExpansion <- vapply(x, \(y) isTRUE(attr(y, "expand")), logical(1))
   if (sum(needsExpansion) == 0) {
     if (isTRUE(attr(x, "expand"))) return(x)
     res <- list(x)
