@@ -40,7 +40,7 @@ generateExpansionValues <- function(value, generateInfo) {
     multiply = generateExpansionValuesMultiply(value, generateInfo$value),
     add = generateExpansionValuesAdd(value, generateInfo$value),
     stop("Unknown generate kind ", kind))
-  out <- out[out >= generateInfo$min & out <= generateInfo$max]
+  out <- unique(out[out >= generateInfo$min & out <= generateInfo$max])
   return(out)
 }
 
