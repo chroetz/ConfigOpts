@@ -34,6 +34,36 @@ replaceExpandValues <- function(proto, replacement) {
 }
 
 
+#' @export
+isOfPrototype <- function(query, proto, ignoreLimits = TRUE) {
+  if (!ignoreLimits) stop("ignoreLimits = FALSE is not implemented")
+  if (length(proto) == 0 && length(query) == 0) return(TRUE)
+  if (inherits(proto, "expansion")) return(TRUE)
+  if (length(query) > length(proto)) return(FALSE)
+  if (is.list(proto)) {
+    if (!is.list(query)) return(FALSE)
+    if (length(query) != length(proto)) return(FALSE)
+    if (length(names(query)) > 0) {
+      if (length(names(proto)) == 0) return(FALSE)
+      if (!all(names(query) %in% names(proto))) return(FALSE)
+      for (nm in names(query)) {
+        if (!isOfPrototype(query[[nm]], proto[[nm]], ignoreLimits)) return(FALSE)
+      }
+    } else {
+      for (i in seq_along(query)) {
+        if (!isOfPrototype(query[[i]], proto[[i]], ignoreLimits)) return(FALSE)
+      }
+    }
+    return(TRUE)
+  }
+  if (length(query) != length(proto)) return(FALSE)
+  return(isTRUE(all.equal(query, proto)))
+}
+
+
+
+
+
 generateExpansionValues <- function(value, generateInfo) {
   out <- switch(
     generateInfo$kind,
