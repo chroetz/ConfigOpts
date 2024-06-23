@@ -9,10 +9,10 @@ hasGenerativeExpands <- function(object) {
 }
 
 #' @export
-replaceExpandValues <- function(proto, replacement) {
+replaceExpandValues <- function(proto, replacement, keepReplacementOutOfLimit = TRUE) {
   if (inherits(proto, "expansion")) {
     if (!"generate" %in% names(proto)) return(proto)
-    proto$values <- generateExpansionValues(replacement, proto$generate)
+    proto$values <- generateExpansionValues(replacement, proto$generate, keepReplacementOutOfLimit)
     return(proto)
   }
   if (is.list(proto)) {
@@ -20,12 +20,12 @@ replaceExpandValues <- function(proto, replacement) {
     if (!is.null(names(proto))) {
       stopifnot(all(names(proto) %in% names(replacement)))
       for (nm in names(proto)) {
-        proto[[nm]] <- replaceExpandValues(proto[[nm]], replacement[[nm]])
+        proto[[nm]] <- replaceExpandValues(proto[[nm]], replacement[[nm]], keepReplacementOutOfLimit)
       }
     } else {
       stopifnot(length(proto) == length(replacement))
       for (i in seq_along(proto)) {
-        proto[[i]] <- replaceExpandValues(proto[[i]], replacement[[i]])
+        proto[[i]] <- replaceExpandValues(proto[[i]], replacement[[i]], keepReplacementOutOfLimit)
       }
     }
     return(proto)
@@ -70,13 +70,17 @@ isOfPrototype <- function(query, proto, ignoreLimits = TRUE, exclude = "name", e
 
 
 
-generateExpansionValues <- function(value, generateInfo) {
+generateExpansionValues <- function(value, generateInfo, keepValueOutOfLimit) {
   out <- switch(
     generateInfo$kind,
     multiply = generateExpansionValuesMultiply(value, generateInfo$value),
     add = generateExpansionValuesAdd(value, generateInfo$value),
     stop("Unknown generate kind ", kind))
-  out <- unique(out[out >= generateInfo$min & out <= generateInfo$max])
+  if (keepValueOutOfLimit) {
+    out <- unique(c(value, out[out >= generateInfo$min & out <= generateInfo$max]))
+  } else {
+    out <- unique(out[out >= generateInfo$min & out <= generateInfo$max])
+  }
   return(out)
 }
 
