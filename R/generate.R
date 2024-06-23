@@ -35,7 +35,7 @@ replaceExpandValues <- function(proto, replacement) {
 
 
 #' @export
-isOfPrototype <- function(query, proto, ignoreLimits = TRUE) {
+isOfPrototype <- function(query, proto, ignoreLimits = TRUE, exclude = "name", excludeRecursive = FALSE) {
   if (!ignoreLimits) stop("ignoreLimits = FALSE is not implemented")
   if (length(proto) == 0 && length(query) == 0) return(TRUE)
   if (inherits(proto, "expansion")) return(TRUE)
@@ -44,14 +44,20 @@ isOfPrototype <- function(query, proto, ignoreLimits = TRUE) {
     if (!is.list(query)) return(FALSE)
     if (length(query) != length(proto)) return(FALSE)
     if (length(names(query)) > 0) {
-      if (length(names(proto)) == 0) return(FALSE)
-      if (!all(names(query) %in% names(proto))) return(FALSE)
-      for (nm in names(query)) {
+      qNames <- setdiff(names(query), exclude)
+      if (!all(qNames %in% names(proto))) return(FALSE)
+      for (nm in qNames) {
         if (!isOfPrototype(query[[nm]], proto[[nm]], ignoreLimits)) return(FALSE)
       }
     } else {
       for (i in seq_along(query)) {
-        if (!isOfPrototype(query[[i]], proto[[i]], ignoreLimits)) return(FALSE)
+        isOfPrototype <- isOfPrototype(
+          query[[i]],
+          proto[[i]],
+          ignoreLimits = ignoreLimits,
+          exclude = if (excludeRecursive) exclude else character(),
+          excludeRecursive = excludeRecursive)
+        if (!isOfPrototype) return(FALSE)
       }
     }
     return(TRUE)
