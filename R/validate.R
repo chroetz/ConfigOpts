@@ -20,12 +20,12 @@ validateOpts <- function(x, filled = TRUE, force = FALSE) {
 
   if (!(all(namesX %in% namesDefault))) {
     stop(
-      objectName, " has unknown entires: ",
+      objectName, " has unknown entries: ",
       paste0(setdiff(namesX, namesDefault), collapse=","))
   }
   if (filled && !all(namesDefault %in% namesX)) {
     stop(
-      objectName, " has missing entires: ",
+      objectName, " has missing entries: ",
       paste0(setdiff(namesDefault, namesX), collapse=","))
   }
 
